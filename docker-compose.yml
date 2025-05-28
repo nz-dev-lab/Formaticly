@@ -2,11 +2,18 @@ services:
   backend:
     build: ./formaticly-backend
     ports:
-      - "8000:8000"
-
+      - "5000:5000"
+    networks:
+      - app-network
   frontend:
     build: ./formaticly-frontend
     ports:
-      - "4200:80"
+      - "8080:80"
     depends_on:
       - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
