@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { z } from 'zod';
 import { NgIf } from '@angular/common';
 
+import { submitFeedbackSubmitFeedbackPost } from '../api/feedback.api'; // Adjust path
+
 const feedbackSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email address"),
@@ -37,24 +39,21 @@ export class SubmitFormsComponent {
       message: [''],
     });
 
-    this.form.valueChanges.subscribe((value) => {
-      this.validate(value);
-    });
+    this.form.valueChanges.subscribe((value) => this.validate(value));
   }
 
   validate(value: any) {
     const result = feedbackSchema.safeParse(value);
-    if (result.success) {
-      this.errors = {};
-    } else {
-      this.errors = {};
-      for (const issue of result.error.issues) {
-        this.errors[issue.path[0] as keyof FeedbackSchemaShape] = issue.message;
-      }
-    }
+    this.errors = result.success
+      ? {}
+      : result.error.issues.reduce((acc, issue) => {
+        acc[issue.path[0] as keyof FeedbackSchemaShape] = issue.message;
+        return acc;
+      }, {} as FeedbackSchemaShape);
   }
 
   async onSubmit() {
+    console.log('Form submitted:', this.form.value);
     this.submitting = true;
     this.successMessage = '';
     this.errorMessage = '';
@@ -69,16 +68,11 @@ export class SubmitFormsComponent {
     }
 
     try {
-      await new Promise((r) => setTimeout(r, 1000));
+      await submitFeedbackSubmitFeedbackPost(value); //Orval generated client call
       this.successMessage = 'Thank you for your feedback!';
-      this.form.reset({
-        name: '',
-        email: '',
-        message: '',
-      });
+      this.form.reset({ name: '', email: '', message: '' });
       this.errors = {};
-
-    } catch {
+    } catch (e) {
       this.errorMessage = 'Something went wrong. Please try again.';
     } finally {
       this.submitting = false;
