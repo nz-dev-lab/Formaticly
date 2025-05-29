@@ -1,14 +1,33 @@
 <nav
-    class="w-full h-16 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex items-center justify-center">
-    <!-- Container for nav links -->
-    <div class="flex items-center justify-center w-full">
-        <ul class="flex items-center space-x-4">
-            <li class="text-lg cursor-pointer font-semibold text-slate-900 dark:text-slate-100">
-                <a routerLink="/" class="hover:underline">Submit Form</a>
-            </li>
-            <li class="text-lg cursor-pointer font-semibold text-slate-900 dark:text-slate-100">
-                <a routerLink="/contact" class="hover:underline">View Submissions</a>
-            </li>
-        </ul>
+    class="w-full h-16 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 fixed top-0 z-50 shadow-md flex items-center justify-between px-4">
+    <!-- Logo or Brand -->
+    <div class="text-lg font-bold text-slate-900 dark:text-slate-100">
+        Formaticly
+    </div>
+
+    <!-- Desktop nav links -->
+    <ul class="hidden md:flex items-center space-x-4">
+        <li class="text-lg cursor-pointer font-semibold text-slate-900 dark:text-slate-100">
+            <a routerLink="/submit-form" class="hover:underline">Submit Form</a>
+        </li>
+        <li class="text-lg cursor-pointer font-semibold text-slate-900 dark:text-slate-100">
+            <a routerLink="/view-submissions" class="hover:underline">View Submissions</a>
+        </li>
+    </ul>
+
+    <!-- Mobile hamburger button -->
+    <button (click)="toggleMobileMenu()" class="md:hidden text-slate-900 dark:text-slate-100 focus:outline-none"
+        aria-label="Toggle menu">
+        &#9776; <!-- Hamburger Icon -->
+    </button>
+
+    <!-- Mobile menu dropdown -->
+    <div *ngIf="mobileMenuOpen"
+        class="absolute top-16 left-0 w-full bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 flex flex-col items-center py-4 space-y-2 md:hidden">
+        <a routerLink="/submit-form" class="text-lg font-semibold text-slate-900 dark:text-slate-100 hover:underline"
+            (click)="closeMobileMenu()">Submit Form</a>
+        <a routerLink="/view-submissions"
+            class="text-lg font-semibold text-slate-900 dark:text-slate-100 hover:underline"
+            (click)="closeMobileMenu()">View Submissions</a>
     </div>
 </nav>
